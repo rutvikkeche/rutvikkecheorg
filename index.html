@@ -3,6 +3,7 @@
 <html>
 <head>
 <meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
@@ -41,13 +42,13 @@
     .dialog {
       position: absolute;
       top: 45%;
-      left: 40%;
+      left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.8);
       color: white;
       padding: 12px 18px;
       border: 2px solid white;
-      width: 300px;
+      width: min(300px, 80vw);
       font-size: 14px;
       cursor: pointer;
       z-index: 5;
@@ -707,6 +708,7 @@
 
      .about-subtext {
        font-size: 20px;
+       transform: none;
      }
 
      .about-me p {
@@ -729,6 +731,24 @@
 
      .hobbies-content {
        font-size: 16px;
+     }
+
+     .experience-container {
+       flex-direction: column;
+       align-items: center;
+     }
+
+     .experience-item:nth-child(1) img,
+     .experience-item:nth-child(2) img,
+     .experience-item:nth-child(4) img,
+     .experience-item:nth-child(3) img {
+       height: 100px;
+       width: 100px;
+     }
+
+     .music-toggle {
+       font-size: 8px;
+       padding: 6px 10px;
      }
    }
 
