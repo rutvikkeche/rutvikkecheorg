@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Education — Your Name</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html">Your Name</a>
+    <nav class="site-nav">
+      <a href="index.html">About</a>
+      <a href="experience.html">Experiences</a>
+      <a href="education.html" aria-current="page">Education</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Education</h1>
+    <p>My academic background and the learnings that shaped me.</p>
+  </div>
+
+  <section class="timeline">
+
+    <!-- EDIT: duplicate this .entry block for each degree, most recent first -->
+    <article class="entry">
+      <div class="meta">
+        <span class="years">2024 &ndash; 2026</span>
+        <span class="gpa">GPA: 0.00/10</span>
+      </div>
+      <h2>Degree Name</h2>
+      <p class="school">School / University, Campus</p>
+    </article>
+
+    <article class="entry">
+      <div class="meta">
+        <span class="years">2018 &ndash; 2023</span>
+        <span class="gpa">GPA: 0.00/10</span>
+      </div>
+      <h2>Degree Name</h2>
+      <p class="school">School / University, Campus</p>
+    </article>
+
+    <article class="entry">
+      <div class="meta">
+        <span class="years">2016 &ndash; 2018</span>
+        <span class="gpa">GPA: 00.00%</span>
+      </div>
+      <h2>Higher Secondary</h2>
+      <p class="school">School Name, City</p>
+    </article>
+
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>&copy; <span id="year"></span> Your Name</span>
+    <button class="to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&uarr;</button>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

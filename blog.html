@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Your Name</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html">Your Name</a>
+    <nav class="site-nav">
+      <a href="index.html">About</a>
+      <a href="experience.html">Experiences</a>
+      <a href="education.html">Education</a>
+      <a href="blog.html" aria-current="page">Blog</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="blog-intro">
+    <p>A collection of thoughts, ideas and learnings I share through LinkedIn articles.</p>
+  </div>
+
+  <!-- EDIT: replace href with your real article links, one <li> per post -->
+  <ul class="blog-list">
+    <li><a href="#" target="_blank" rel="noopener">Post title one</a></li>
+    <li><a href="#" target="_blank" rel="noopener">Post title two</a></li>
+    <li><a href="#" target="_blank" rel="noopener">Post title three</a></li>
+    <li><a href="#" target="_blank" rel="noopener">Post title four</a></li>
+    <li><a href="#" target="_blank" rel="noopener">Post title five</a></li>
+    <li><a href="#" target="_blank" rel="noopener">Post title six</a></li>
+  </ul>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>&copy; <span id="year"></span> Your Name</span>
+    <button class="to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&uarr;</button>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

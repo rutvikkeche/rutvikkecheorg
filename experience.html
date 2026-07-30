@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experiences — Your Name</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html">Your Name</a>
+    <nav class="site-nav">
+      <a href="index.html">About</a>
+      <a href="experience.html" aria-current="page">Experiences</a>
+      <a href="education.html">Education</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Experiences</h1>
+    <p>A timeline of my professional experiences and the work I've done.</p>
+  </div>
+
+  <section class="timeline">
+
+    <!-- EDIT: duplicate this .entry block for each role, most recent first -->
+    <article class="entry">
+      <div class="meta">
+        <span class="years">May 2024 &ndash; Present</span>
+      </div>
+      <h2>Company Name</h2>
+      <p class="sub">Job Title &middot; City, Country</p>
+      <div class="desc">
+        <p>One or two sentences on what the role is and what the team / product does.</p>
+        <p>A short paragraph on what you actually focus on day to day &mdash; the problems you own and the areas you work across.</p>
+        <p>A closing paragraph on the kind of work you enjoy most in this role, or a recent win worth calling out.</p>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="meta">
+        <span class="years">Jul 2022 &ndash; Apr 2024</span>
+      </div>
+      <h2>Previous Company</h2>
+      <p class="sub">Job Title &middot; City, Country</p>
+      <div class="desc">
+        <p>Describe the scope of this role and the products or systems you worked on.</p>
+        <p>Add another paragraph on key contributions or outcomes if useful.</p>
+      </div>
+    </article>
+
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>&copy; <span id="year"></span> Your Name</span>
+    <button class="to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&uarr;</button>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
