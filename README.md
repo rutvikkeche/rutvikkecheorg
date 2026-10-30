@@ -1,14 +1,9 @@
-# Personal Website
+# Rutvik Keche
 
-A simple personal website I made to reflect who I am.
+Personal portfolio: projects, product musings, CV and a way to say hi.
 
-Not built to impress, just a quiet corner of the internet that feels like me.
-Has calming skyrim background music that plays when you visit, mostly because i wanted it to feel like a place you could slow down in.
+Built with vanilla HTML, CSS and JS. One page (`index.html`) plus two images, no build step.
 
-Not mobile responsive. Best viewed on a desktop, ideally with headphones.
+Live at https://rutvikkeche.github.io/rutvikkecheorg/
 
----
-
-built with vanilla html/css/js.
-
-Here - https://rutvikkeche.github.io/rutvikkecheorg/
+The previous version of the site (with the background music) is in the git history, before the "Replace site with new portfolio" commit.
