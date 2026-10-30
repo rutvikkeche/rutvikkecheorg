@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>Rutvik Keche</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="color-scheme" content="only light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Karla:ital,wght@0,400;0,500;1,400&family=Roboto:wght@700&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap">
+<style>
+/* Stationary one-screen layout. Light only (no dark mode). On wide screens everything is sized from one unit (--u), so type, rows and portrait scale together with the window. On phones: text and projects only. Only the project list scrolls. */
+:root{
+  color-scheme:only light;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --paper:#fff;
+  --ink:#0b0b0d;
+  --mute:#5d5d63;
+  --hi:#ffe94d;
+  --blue:#2b3cff;
+  --red:#ff3b63;
+
+  --u:min(1vw,1.7778svh);
+  --pw:min(66vw,calc(100svh*1.3333));
+  --rl:min(70vw,calc(var(--pw) + 4vw));
+
+  --row:3.1rem;
+  --fs-intro:clamp(1.3rem,6.6vw,2rem);
+  --fs-list:clamp(.8rem,3.5vw,.95rem);
+  --fs-small:.72rem;
+  --gap:clamp(20px,5svh,40px);
+}
+@media (min-width:700px) and (min-aspect-ratio:1/1){
+  :root{
+    --row:max(2.1rem,calc(var(--u)*3.3));
+    --fs-intro:max(17px,calc(var(--u)*1.95));
+    --fs-list:max(10.5px,calc(var(--u)*1));
+    --fs-small:max(9.5px,calc(var(--u)*.84));
+    --gap:calc(var(--u)*3);
+  }
+}
+html,body{height:100%; margin:0; overflow:hidden; background:#fff !important; color:var(--ink)}
+*{box-sizing:border-box}
+body{font-family:var(--mono); -webkit-font-smoothing:antialiased}
+::selection{background:var(--hi); color:var(--ink)}
+
+.page{position:relative; height:100svh; overflow:hidden; background:#fff; isolation:isolate}
+.grain{
+  position:absolute; inset:0; z-index:5; pointer-events:none; opacity:.05; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- portrait (wide screens only) ---------- */
+.photo{display:none; position:absolute; z-index:1; left:0; top:0; bottom:0; width:var(--pw); margin:0; animation:in .9s ease-out both}
+.photo picture{display:block; width:100%; height:100%}
+.photo img{display:block; width:100%; height:100%; object-fit:cover; object-position:left bottom; mix-blend-mode:multiply; user-select:none}
+@keyframes in{from{opacity:0} to{opacity:1}}
+
+/* ---------- text column ---------- */
+.right{
+  position:relative; z-index:3; height:100%; display:flex; flex-direction:column; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:rgba(11,11,13,.4) transparent;
+  padding:clamp(20px,5svh,48px) clamp(20px,7vw,48px) clamp(14px,2.4svh,24px);
+}
+.mid{flex:1 0 auto; display:flex; flex-direction:column; justify-content:center; gap:var(--gap)}
+
+.intro{margin:0; font-weight:400; font-size:var(--fs-intro); line-height:1.55; cursor:default; width:max-content; max-width:100%}
+.intro span{display:block}
+.mark{display:inline-block !important; background:var(--hi); padding:0 .45em 0 .25em; margin-left:-.25em; color:inherit; text-decoration:none; cursor:pointer; transition:background-color .08s steps(2,end)}
+.mark:hover{background:#ffd60a}
+.mark:focus-visible{outline:2px solid var(--ink); outline-offset:3px}
+
+.wrap{display:flex; flex-direction:column; min-height:0; flex:0 1 auto; font-size:var(--fs-list)}
+@property --ft{syntax:"<length>"; inherits:false; initial-value:0px}
+@property --fb{syntax:"<length>"; inherits:false; initial-value:0px}
+.list{
+  --ft:0px; --fb:0px;
+  list-style:none; position:relative; margin:0 0 0 -.9em; padding:0 1.4em 0 0; counter-reset:p;
+  flex:0 1 auto; min-height:0; max-height:calc(var(--row)*6.5);
+  overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:rgba(11,11,13,.4) transparent;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--ft),#000 calc(100% - var(--fb)),transparent 100%);
+          mask-image:linear-gradient(to bottom,transparent 0,#000 var(--ft),#000 calc(100% - var(--fb)),transparent 100%);
+  transition:--ft .25s, --fb .25s;
+}
+.wrap[data-end="false"] .list{--fb:calc(var(--row)*1.1)}
+.wrap[data-start="false"] .list{--ft:calc(var(--row)*.9)}
+.list li{counter-increment:p}
+.item{
+  position:relative; display:grid; grid-template-columns:2.6em minmax(0,1fr) auto; align-items:center; column-gap:.9em;
+  height:var(--row); padding:0 .9em; text-decoration:none; color:var(--ink);
+  font-size:1em; letter-spacing:.06em; text-transform:uppercase; line-height:1.1;
+  transition:background-color .08s steps(2,end);
+}
+.no{font-size:.78em; color:var(--mute); letter-spacing:.04em}
+.no::before{content:attr(data-n)}
+.lb{position:relative; overflow-wrap:anywhere}
+.arr{width:1em; height:1em; display:block; transition:transform .12s steps(3,end)}
+.item:hover,.item:focus-visible{background:var(--hi)}
+.item:hover .arr,.item:focus-visible .arr{transform:translate(2px,-2px)}
+.item:focus-visible{outline:2px solid var(--ink); outline-offset:-2px}
+/* "more below" cue: fade (above) + this row. Both follow the scroll position and vanish at the end. */
+.more{
+  display:flex; align-items:center; gap:.7em; height:2.4em; margin:0; padding:0; border:0; background:none; cursor:pointer;
+  font:inherit; font-size:var(--fs-small); letter-spacing:.16em; text-transform:uppercase; color:var(--ink); text-align:left;
+  opacity:1; transition:opacity .25s;
+}
+.more:focus,.more:focus-visible{outline:none}
+.wrap[data-end="true"] .more{opacity:0; pointer-events:none}
+.more svg{width:1.2em; height:1.2em; display:block; animation:bob 1.2s steps(2,end) infinite}
+@keyframes bob{0%{transform:translateY(-2px)} 100%{transform:translateY(2px)}}
+
+/* ---------- footer ---------- */
+.foot{flex:none; display:flex; flex-wrap:wrap; justify-content:flex-start; align-items:center; gap:.9em 2.6em; font-size:var(--fs-small); letter-spacing:.14em; text-transform:uppercase; line-height:1; padding-top:clamp(8px,1.4svh,16px)}
+.hi{
+  display:inline-flex; align-items:center; gap:.8em; color:var(--ink); background:none; border:0; padding:.6em .5em; margin:-.6em -.5em;
+  font:inherit; letter-spacing:inherit; text-transform:inherit; text-decoration:none; cursor:pointer;
+}
+.hi:hover{background:var(--hi)}
+.hi:focus-visible{outline:2px solid var(--ink); outline-offset:3px}
+.hi svg{width:1.4em; height:1em; display:block; transition:transform .12s steps(3,end)}
+.hi:hover svg,.hi:focus-visible svg{transform:translateX(3px)}
+
+/* ---------- wide screens: portrait left, text right ---------- */
+@media (min-width:700px) and (min-aspect-ratio:1/1){
+  .photo{display:block}
+  .right{
+    position:absolute; top:0; bottom:0; left:calc(var(--rl) - 20px); right:0; height:auto;
+    padding:max(18px,calc(var(--u)*4.2)) max(20px,calc(var(--u)*5)) max(14px,calc(var(--u)*2.4)) 20px;
+  }
+  .foot{padding-top:max(8px,calc(var(--u)*1))}
+}
+
+
+/* ---------- project page ---------- */
+#project{position:fixed; inset:0; z-index:20; background:#fff; color:var(--ink); overflow-y:auto; overscroll-behavior:contain; display:none; scrollbar-width:thin; scrollbar-color:rgba(11,11,13,.4) transparent}
+#project.on{display:block; animation:in .35s ease-out both}
+.back{
+  position:fixed; z-index:40; top:clamp(12px,2vw,24px); left:max(clamp(12px,2vw,24px),env(safe-area-inset-left,0px));
+  width:clamp(44px,4vw,56px); height:clamp(44px,4vw,56px); display:grid; place-items:center; color:var(--ink); background:#fff;
+  border-radius:clamp(14px,1.4vw,18px); box-shadow:0 1px 0 rgba(0,0,0,.05), 0 6px 22px rgba(0,0,0,.16); text-decoration:none;
+  transition:background-color .08s steps(2,end);
+}
+.back svg{width:46%; height:46%; display:block; transition:transform .12s steps(3,end)}
+.back:hover{background:var(--hi)}
+.back:hover svg{transform:translateX(-3px)}
+.back:focus-visible{outline:2px solid var(--ink); outline-offset:3px}
+
+.hero{position:relative; width:100%; aspect-ratio:2/1; max-height:72svh; overflow:hidden; background:var(--tone,#1d1d22)}
+.hero img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
+.hero::after{content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.38),rgba(0,0,0,0) 70%)}
+.hero .ph{position:absolute; right:max(12px,1.6vw); bottom:max(10px,1.4vw); z-index:2; color:rgba(255,255,255,.55); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase}
+.hero h1{
+  position:absolute; z-index:2; left:50%; top:50%; transform:translate(-50%,-50%); width:88%; margin:0; text-align:center;
+  color:#fff; font-weight:500; font-size:clamp(1.15rem,min(4.2vw,7svh),3.6rem); line-height:1.2; letter-spacing:.02em; text-transform:lowercase;
+  outline:none;
+}
+.hero.light{background:#fff}
+.hero.light::after{display:none}
+.hero.light img{mix-blend-mode:multiply}
+.hero.light h1{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+.doc .dtitle{margin:0 0 .5em; text-align:left; font-weight:500; font-size:clamp(1.3rem,3vw,2rem); line-height:1.2; letter-spacing:.01em}
+.doc{max-width:38rem; margin:0 auto; padding:clamp(32px,6vw,76px) clamp(22px,6vw,32px) clamp(64px,10vw,128px); font-size:clamp(.82rem,.45vw + .68rem,.98rem); line-height:1.9; text-align:justify; hyphens:auto; -webkit-hyphens:auto}
+.doc p{margin:0 0 1.9em}
+.doc .meta{display:flex; flex-wrap:wrap; gap:.4em 1.6em; margin-bottom:2.8em; font-size:.76em; letter-spacing:.14em; text-transform:uppercase; color:var(--mute); text-align:left}
+.doc .sig{margin:2.6em 0 0; text-align:left; letter-spacing:.06em}
+
+/* peek-a-boo project switcher */
+.peek{position:fixed; z-index:30; left:0; top:0; bottom:0; width:0}
+.peek-tab{
+  position:absolute; left:0; top:50%; width:30px; height:112px; margin-top:-56px; padding:0 0 0 8px; border:0; cursor:pointer;
+  background:var(--ink); color:#fff; border-radius:0 9px 9px 0; font:inherit; font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+  writing-mode:vertical-rl; display:grid; place-items:center; transform:translateX(-8px); z-index:2;
+  animation:peekaboo 7s ease-in-out 1.2s infinite; transition:transform .2s, opacity .2s;
+}
+.peek-tab:hover,.peek-tab:focus-visible{transform:translateX(0); animation:none}
+.peek-tab:focus-visible{outline:2px solid var(--ink); outline-offset:3px}
+@keyframes peekaboo{0%,84%,100%{transform:translateX(-8px)} 90%{transform:translateX(0)} 95%{transform:translateX(-4px)}}
+.peek.open .peek-tab{opacity:0; pointer-events:none}
+.peek-panel{
+  position:absolute; left:0; top:0; bottom:0; width:min(21rem,88vw); display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(72px,10svh,110px) 1.2em clamp(24px,4svh,40px) clamp(14px,2vw,26px); background:#fff; border-right:1px solid #e4e4e0; box-shadow:10px 0 40px rgba(0,0,0,.08);
+  font-size:var(--fs-list); transform:translateX(-102%); visibility:hidden; transition:transform .28s cubic-bezier(.2,.8,.2,1), visibility 0s .28s;
+}
+.peek.open .peek-panel{transform:none; visibility:visible; transition:transform .28s cubic-bezier(.2,.8,.2,1), visibility 0s}
+.peek-panel h2{margin:0 0 1.2em; font-size:.74em; font-weight:400; letter-spacing:.16em; text-transform:uppercase; color:var(--mute)}
+.peek-panel ul{list-style:none; margin:0 0 0 -.9em; padding:0; max-height:calc(var(--row)*8); overflow-y:auto; overscroll-behavior:contain}
+
+/* ---------- case-study sections: big number | title + label | text ---------- */
+.cases{max-width:80rem; margin:0 auto; padding:clamp(32px,6vw,72px) clamp(22px,5vw,64px) clamp(72px,10vw,140px)}
+.cases .dtitle{margin:0 0 .5em; font-weight:500; font-size:clamp(1.3rem,3vw,2rem); line-height:1.2}
+.cases .meta{display:flex; flex-wrap:wrap; gap:.4em 1.6em; margin:0 0 clamp(40px,7vw,88px); font-size:.76rem; letter-spacing:.14em; text-transform:uppercase; color:var(--mute)}
+.cs{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,2.9fr); column-gap:clamp(16px,3vw,48px); margin:0 0 clamp(56px,9vw,128px)}
+.cs-n{font-family:"Archivo Black","Arial Black",Impact,sans-serif; font-size:clamp(4rem,11.5vw,10.5rem); line-height:.74; letter-spacing:-.04em; margin:.02em 0 0; color:var(--ink)}
+.cs-body{border-top:2px solid var(--ink); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.9fr); column-gap:clamp(16px,3vw,48px); padding-top:clamp(14px,1.6vw,22px)}
+.cs-t h1,.cs-t h2{outline:none; margin:0 0 .7em; font-family:"Archivo Black","Arial Black",Impact,sans-serif; font-weight:400; font-size:clamp(1.15rem,1.9vw,1.75rem); line-height:1.08; letter-spacing:-.01em}
+.cs-tag{margin:0; font-size:.74rem; font-weight:500; letter-spacing:.04em}
+.cs-x p{margin:0 0 1.5em; font-size:clamp(.8rem,.4vw + .66rem,.92rem); line-height:1.78; color:#4a4a4f}
+.cs-x p:last-child{margin-bottom:0}
+.cs-sub{margin:2.6em 0 .8em; font-size:.74rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--ink)}
+.cs-sub:first-child{margin-top:0}
+.cs-stats{margin:2.4em 0 0; display:grid; gap:1.6em}
+.cs-stat strong{display:block; text-wrap:balance; font-family:"Archivo Black","Arial Black",Impact,sans-serif; font-weight:400; font-size:clamp(1.25rem,2.1vw,1.9rem); line-height:1.05; letter-spacing:-.02em}
+.cs-stat span{display:block; margin-top:.35em; font-size:.74rem; line-height:1.45; color:var(--mute)}
+@media (min-width:760px){ .cs-t{position:sticky; top:clamp(24px,4vw,48px); align-self:start} }
+/* single project block */
+.cases.solo{padding-top:clamp(104px,17svh,200px)}
+.cases.solo .cs{margin-bottom:0}
+@media (max-width:759px){
+  .cs{grid-template-columns:1fr}
+  .cs-n{margin:0 0 .25em}
+  .cs-body{grid-template-columns:1fr; row-gap:1.4em}
+}
+
+/* ---------- product musings ---------- */
+#project.mus .back{display:none}
+.mus-wrap{max-width:46rem; margin:0 auto; padding:clamp(28px,6vh,64px) 22px 18vh; font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace; color:var(--ink)}
+.mus-back{display:inline-block; font-size:.74rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); text-decoration:none; padding:.5em .4em; margin:0 0 2.2em -.4em}
+.mus-arr{margin-right:1em}
+.mus-back:hover,.mus-back:focus-visible{background:var(--hi); outline:none}
+.mus-wrap h1{outline:none; margin:0 0 .7em; font-family:"Archivo Black","Arial Black",Impact,sans-serif; font-weight:400; font-size:clamp(1.5rem,3.2vw,2.4rem); line-height:1.1; letter-spacing:-.01em}
+.mus-pub{margin:0 0 2.4em; font-size:.74rem; font-weight:500; letter-spacing:.04em}
+.mus-wrap p{margin:0 0 1.5em; font-size:clamp(.8rem,.4vw + .66rem,.92rem); line-height:1.78; color:#4a4a4f}
+.mus-wrap p.mus-pub{color:var(--ink); font-size:.74rem; line-height:1.4}
+.mus-wrap .mus-seq{margin:-.8em 0 1.5em; padding-left:1.1em; border-left:2px solid var(--ink); color:var(--ink)}
+.mus-sub{margin:0 0 2.2em; font-size:clamp(.8rem,.4vw + .66rem,.92rem); line-height:1.78; color:#4a4a4f}
+.hi-form label{display:block; margin:0 0 .6em; font-size:.74rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase}
+.hi-form input,.hi-form textarea{display:block; width:100%; box-sizing:border-box; margin:0 0 1.8em; padding:.9em 1em; font:inherit; font-size:.92rem; line-height:1.6; color:var(--ink); background:#fff; border:2px solid var(--ink); border-radius:0; resize:vertical}
+.hi-form textarea{min-height:11rem}
+.hi-form input:focus,.hi-form textarea:focus{outline:none}
+.hi-row{display:flex; align-items:center; justify-content:space-between; gap:16px}
+.hi-count{font-size:.74rem; font-weight:500; letter-spacing:.04em; color:#4a4a4f}
+.hi-send{display:inline-flex; align-items:center; gap:.8em; padding:.9em 1.3em; font:inherit; font-size:.74rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); background:#fff; border:2px solid var(--ink); border-radius:0; cursor:pointer}
+.hi-send svg{width:1.4em; height:1em}
+.hi-send:hover,.hi-send:focus-visible{background:var(--ink); color:#fff; outline:none}
+.hi-note{margin:1.4em 0 0; font-size:.74rem; line-height:1.6; color:#4a4a4f}
+.mus-list{list-style:none; margin:2.2em 0 0; padding:0}
+.mus-list li{border-top:2px solid var(--ink)}
+.mus-list li:last-child{border-bottom:2px solid var(--ink)}
+.mus-list a{display:block; padding:1.3em .5em; color:inherit; text-decoration:none}
+.mus-list a:hover,.mus-list a:focus-visible{background:var(--hi); outline:none}
+.mus-list strong{display:block; font-family:"Archivo Black","Arial Black",Impact,sans-serif; font-weight:400; font-size:clamp(1.05rem,1.7vw,1.5rem); line-height:1.12; letter-spacing:-.01em}
+.mus-list span{display:block; margin-top:.7em; font-size:.74rem; font-weight:500; letter-spacing:.04em; color:#4a4a4f}
+
+/* ---------- about / resume page ---------- */
+.resume{max-width:46rem; margin:0 auto; padding:clamp(80px,9vw,112px) clamp(22px,6vw,32px) clamp(64px,10vw,120px); font-size:clamp(.78rem,.4vw + .64rem,.9rem); line-height:1.7; text-align:left}
+.rs-head{display:grid; grid-template-columns:auto minmax(0,1fr) auto; column-gap:clamp(16px,3vw,32px); align-items:start}
+.rs-photo{width:clamp(72px,9vw,96px); aspect-ratio:96/112; background:#ddd url("portrait-cv.jpg") center/cover no-repeat}
+.rs-id,.rs-contact{margin:0; font-style:normal}
+.rs-id strong{font-weight:500; outline:none}
+.rs-contact{text-align:right}
+.rs-summary{margin:2.6em 0 3.6em}
+.rs-sec{margin:0 0 3.2em}
+.rs-sec h2{margin:0 0 1.8em; display:flex; gap:.8em; align-items:baseline; font-size:.9em; font-weight:500; letter-spacing:.06em; text-transform:uppercase}
+.rs-sec h2::before{content:"\00b6"; font-weight:500}
+.rs-item{display:grid; grid-template-columns:11em minmax(0,1fr); column-gap:1.6em; margin:0 0 2.2em}
+.rs-date,.rs-sub{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif; font-style:italic; font-size:1.12em; line-height:1.4; color:#333}
+.rs-sub{margin:0 0 .15em}
+.rs-main{min-width:0}
+.rs-main strong{display:block; font-weight:500; margin:0 0 .3em}
+.rs-main p{margin:0}
+.rs-bul{margin:0; padding:0; list-style:none}
+.rs-bul li{position:relative; padding-left:1.3em; margin:0 0 .6em}
+.rs-bul li::before{content:"–"; position:absolute; left:0}
+.rs-contact a{color:inherit; text-decoration:none}
+.rs-contact a:hover,.rs-contact a:focus-visible{background:var(--hi); outline:none}
+.rs-skills{list-style:none; margin:0; padding:0 0 0 12.6em; line-height:1.55}
+@media (max-width:639px){
+  .rs-head{grid-template-columns:auto minmax(0,1fr)}
+  .rs-contact{grid-column:1/-1; text-align:left; margin-top:1.4em}
+  .rs-item{grid-template-columns:1fr; row-gap:.4em}
+  .rs-skills{padding-left:0}
+}
+
+@media (hover:none){ .peek-tab{transform:none; animation:none; width:32px} }
+@media (prefers-reduced-motion:reduce){
+  .photo,.more svg,#project.on,.peek-tab{animation:none !important}
+  .peek-panel,.peek-tab{transition:none !important}
+  .peek-tab{transform:translateX(-8px)} .peek-tab:hover,.peek-tab:focus-visible{transform:none}
+  .item </style>
+
+<div class="page">
+  <figure class="photo"><picture><source media="(min-width:700px) and (min-aspect-ratio:1/1)" srcset="portrait.jpg"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" width="1448" height="1086" decoding="async" alt="Black-and-white portrait of Rutvik smiling, in a dark sweater over a collared shirt"></picture></figure>
+
+  <section class="right">
+    <div class="mid">
+      <h1 class="intro"><span>hi,</span><a class="mark" href="#/about">this is rutvik.</a><span>i build cool stuff.</span></h1>
+
+      <div class="wrap" id="wrap" data-start="true" data-end="false">
+        <h2 id="work" hidden>My Projects</h2>
+        <nav aria-labelledby="work">
+          <!-- The list is built from the PROJECTS array in the script at the bottom. -->
+          <ul class="list" id="list"></ul>
+        </nav>
+        <button class="more" id="more" type="button" tabindex="-1" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 1v9M2 6.5l4 4 4-4"/></svg>
+          <span><span id="moreN">0</span> more</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="foot">
+      <!-- Set the href to your email or contact link. -->
+      <a class="hi" href="#/hi"><span>Say hi</span><svg viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M0 5h12M8 1l4 4-4 4"/></svg></a>
+      <a class="hi" href="#/musings"><span>Product Musings</span><svg viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M0 5h12M8 1l4 4-4 4"/></svg></a>
+    </div>
+  </section>
+  <div class="grain"></div>
+</div>
+
+<div id="project" role="region" aria-label="Project" tabindex="-1">
+  <a class="back" id="back" href="#/" aria-label="Back to all projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M21 12H3M10 5l-7 7 7 7"/></svg></a>
+  <main id="pmain"></main>
+  <aside class="peek" id="peek" aria-label="Other projects"></aside>
+</div>
+
+<script>
+(function(){
+  /* ---------- projects: edit here ----------
+     slug = link name, title = name in the list and on the page,
+     tag  = small label under the title,
+     desc = array of paragraphs shown next to the title (optional; a placeholder is used if left out),
+     heading = page title if different from the list name, blocks = [{p:['paragraph',...]}] for longer write-ups,
+     stats = [{v:'big number',l:'label'}] shown under the title. */
+  var PROJECTS=[
+    {slug:'lumen-design-system',title:'Lumen Design System',
+      heading:'LUMEN - The New BigBasket Experience',
+      tag:'App-wide visual transformation and design system modernisation',
+      stats:[{v:'12,000+ → ~600',l:'Design tokens'},{v:'22 million',l:'Customers on the new visual language'}],
+      blocks:[
+        {p:['Lumen was an app-wide visual transformation initiative undertaken to support the migration to a new visual language and align the application\'s experience with the brand identity the company was moving towards. The primary objective was to modernise the look and feel of the application while maintaining existing functionality, preserving established user journeys and ensuring that baseline product metrics remained stable throughout the transition.']},
+        {p:['The complexity lay in implementing a widespread visual change within a short timeframe without disrupting the existing application experience. Since UI components were interconnected and often reused across multiple journeys, changes could not be approached as isolated redesigns.']},
+        {p:['My role was to own the transition end to end, maintaining a bird\'s-eye view of the application to ensure that individual component changes remained consistent with the broader experience and did not introduce functional regressions.']},
+        {p:['I began by understanding the existing UI architecture, how components were structured and how they interacted across different user journeys. This helped establish how the new design system could replicate existing functionality while introducing the updated visual language. I continuously evaluated the redesigned components in the context of the larger application, iterating on them to ensure that the visual changes did not compromise usability or familiar interactions.']},
+        {p:['An important part of this exercise was restructuring the underlying design system. Design tokens are reusable variables that define visual properties such as colours, typography, spacing and borders, allowing these properties to remain consistent across different components.','The existing implementation had over 12,000 tokens, many of which were tied directly to specific visual values. We introduced a semantic layer to the token architecture, separating the underlying visual properties from how they were used across the application. This made the system more flexible and easier to maintain, allowing visual changes to be managed more consistently.','The restructuring reduced the token count from over 12,000 to approximately 600, significantly simplifying the design architecture and reducing repetitive code changes during future visual updates.']},
+        {p:['Another important aspect was ensuring that the new design system could be adopted beyond its initial implementation. Much of the technical knowledge around the new components, tokens and UI structure initially resided with me, while the content team responsible for executing campaigns was not particularly technical. I bridged this gap by initially handling campaign implementation, helping structure campaign interfaces using the new components, and gradually familiarising the team with the new system. This ensured that the transition was not dependent on a single technical owner and that the content team could independently work with the updated visual language.']},
+        {p:['Ultimately, the initiative went beyond a visual redesign. We successfully stabilised the application through a comprehensive design system overhaul, maintained the existing product experience and established a scalable foundation aligned with the brand\'s future identity. The new visual language has since been rolled out across the application to all 22 million customers, demonstrating our ability to execute a fundamental transformation at scale while preserving the stability of the existing product.']}
+      ]},
+    {slug:'non-endemic-monetization',title:'Non-Endemic Monetization',tag:'Reward-delivery mechanisms for non-endemic brand campaigns',
+      stats:[{v:'₹90 lakh',l:'Monthly revenue generated'}],
+      desc:["At BigBasket, I worked on designing reward-delivery mechanisms that enabled non-endemic brands to reach customers through promotional campaigns. These partnerships allowed brands to gain visibility and engagement on the platform, while creating an additional monetisation opportunity for BigBasket.", "My role involved designing two reward-delivery flows and owning the third-party interface that powered them. A key part of the work was evolving the underlying distribution mechanism to make reward visibility fairer across brands, while reducing the operational effort involved in managing campaigns.", "The initial approach was time-based segmentation. Rewards from different brands were scheduled across predefined time slots. However, this created an inherent visibility imbalance: brands scheduled during peak traffic hours received significantly more exposure than those assigned to off-peak slots. The model also required considerable manual effort, as teams had to continuously monitor schedules and change time segments to manage campaign distribution.", "We then moved to a stack-based model. Instead of managing reward visibility through time slots, campaigns could be configured in a common stack, with customers progressing through different rewards based on the number of times they interacted with the reward experience. This simplified campaign management considerably: the stack could be updated once, and the distribution logic would serve different rewards as customers progressed through it.", "However, this model exposed another fairness issue. We could have as many as ten rewards in the stack, but customers typically opened the app only three to four times a month. This meant rewards placed towards the top of the stack had a much higher likelihood of being seen, while those further down received disproportionately less exposure. Even though the stack simplified operations, it did not ensure equitable visibility across brands.", "To address this, we introduced segmentation within the stack itself. Rather than having every customer start at the same position, different customer segments were assigned different starting points in the reward stack. This distributed visibility more evenly across rewards, ensuring that brands were not disadvantaged simply because their campaigns occupied lower positions in the stack.", "Alongside designing these distribution mechanisms, I owned the third-party interface that powered the flows, enabling the setup and management of multiple brand campaigns through a more scalable system.", "The initiative generated approximately ₹90 lakh in monthly revenue, while creating a more operationally efficient and equitable way for BigBasket to distribute rewards and monetise its customer reach."]},
+    {slug:'probabilistic-sponsored-placement',title:'Probabilistic Sponsored Placement Monetisation',tag:'Selling a probability of premium visibility instead of a fixed slot',
+      stats:[{v:'₹26 lakh → ₹50 lakh',l:'Weekly monetisation'}],
+      desc:["The existing monetisation model followed a fixed-slot reservation approach, where brands paid for guaranteed positions within a sponsored placement. Position 1 was priced at ₹10 lakh per week, while Positions 2–5 were priced at ₹4 lakh each, generating a total of ₹26 lakh per week.", "While straightforward, this model placed a ceiling on monetisation. Each position could effectively be sold to only one brand at a time, limiting the revenue potential of premium placements.", "We explored a probabilistic monetisation model, shifting from selling guaranteed ownership of a position to selling brands a probability of appearing in the premium Position 1. Instead of reserving the slot for one advertiser, multiple brands could participate in the allocation, with their probability of receiving premium visibility determined through a data-driven mechanism.", "This changed how we monetised sponsored visibility. Rather than treating Position 1 as a single inventory slot, we could monetise the opportunity to appear there across multiple brands and impressions. It also made allocation more dynamic, moving away from the limitations of fixed-slot reservations.", "The new model increased weekly monetisation from approximately ₹26 lakh to ₹50 lakh, by enabling five brands to participate at ₹10 lakh each per week. This significantly improved revenue potential while making premium sponsored visibility a more flexible and scalable advertising product."]},
+    {slug:'homepage-widget-revamp',title:'Homepage Widget Revamp',tag:'Bento, scrollable and shuffle widget formats for browse-led discovery',
+      stats:[{v:'3',l:'New widget formats, now mainstays of the homepage'}],
+      blocks:[{"p": ["A key part of my work involved rethinking the widget formats used across the homepage, particularly for users entering through a browse-led journey. The objective was to make the homepage a more effective discovery surface, moving beyond conventional static layouts to create more engaging ways to surface products, categories, events and deals.", "We introduced three new widget formats:"]}, {"h": "Bento Widget", "p": ["A modular layout with unequal, asymmetrical entry points that allows us to give specific content or positions greater visual prominence. Unlike a uniform grid, the bento layout creates a distinct visual hierarchy, helping draw attention to particular products, categories or promotional placements that we want to prioritise."]}, {"h": "Scrollable Widget", "p": ["A horizontally scrollable format designed to accommodate multiple events within a single widget. This became a primary space for showcasing multiple events, allowing users to browse through different event cards without requiring separate sections for each one. It also made more efficient use of homepage real estate."]}, {"h": "Shuffle Widget", "p": ["A format that allows users to cycle through different deals directly within the widget. Users can discover alternative offers without navigating away from the homepage, helping preserve their browsing flow while increasing the number of deals they can explore within the same placement."]}, {"p": ["These formats evolved beyond individual UI experiments to become mainstays of the BigBasket homepage. Together, they established more flexible ways to structure the browse experience, control visual hierarchy and improve how users discover content and offers without disrupting their journey."]}]},
+    {slug:'platform-ux-research',title:'Platform UX Research and Competitive Benchmarking',tag:'UX and competitive audit of the BigBasket app',
+      stats:[{v:'30+',l:'Top-level categories benchmarked'},{v:'22',l:'UX enhancements across 8 high-impact pages'}],
+      desc:["I conducted a broad UX and competitive audit of the BigBasket app to identify opportunities to improve the overall shopping experience, particularly across product discovery and browse-led journeys.", "The exercise involved benchmarking the platform against competing quick-commerce applications across 30+ top-level categories. Rather than limiting the analysis to visual comparisons, I evaluated the underlying experience across multiple dimensions, including navigation, filter availability and relevance, product listing layouts, SKU presentation, visual hierarchy, accessibility and interaction patterns.", "A key focus was identifying friction points within existing user journeys and understanding whether these stemmed from interface design or underlying product logic. For instance, the audit highlighted instances where category filters were outdated or irrelevant to the products being displayed. This demonstrated that improving the experience required more than a visual redesign; it also required revisiting the logic powering these interactions.", "I consolidated the findings into actionable recommendations and prioritised improvements across eight high-impact pages, resulting in 22 UX enhancements. These covered improvements to product discovery, navigation, information hierarchy, accessibility and the overall consistency of the shopping experience.", "The exercise helped establish a more structured approach to identifying UX gaps, translating competitive insights into product opportunities, and prioritising improvements across the app."]},
+    {slug:'gif-support-plp',title:'GIF Support Across Product Listing Pages',tag:'Media pipeline architecture and backward compatibility',
+      desc:["What appeared to be a straightforward feature request — enabling GIFs on Product Listing Pages (PLPs) — turned into a more involved exercise in understanding and modifying the app's underlying media architecture. The challenge was not just making GIFs render, but doing so without disrupting existing functionality or breaking compatibility with older app versions.", "Product media was processed through two distinct pipelines: one for images and another for videos, each feeding its corresponding Flutter rendering package. The complication was that BigBasket's media infrastructure classified GIFs as videos, whereas Flutter treated them as images. As a result, GIFs entered the video pipeline but failed at the rendering layer because the video package could not process them.", "The initial solution was to retain GIFs in the existing video pipeline and reroute them to the image-rendering path before they reached Flutter. However, this introduced a significant backward-compatibility risk. Older app versions already consumed the video pipeline but could not recognise GIFs within it, potentially breaking media rendering for users who had not updated their applications.", "I examined the entire ingestion and delivery journey to identify potential failure points beyond rendering. Rather than modifying existing production pipelines, we decided to introduce a dedicated intermediate pipeline, gif_video, specifically for GIF ingestion and delivery. This kept the existing image and video pipelines untouched, while ensuring that only app versions capable of handling the new pipeline would consume it.", "Although this introduced an additional pipeline to maintain, it provided a safer solution. The work involved understanding dependencies across media ingestion, classification, pipeline routing, Flutter rendering and app-version compatibility.", "Ultimately, we were able to introduce GIF support without changing the behaviour of existing media pipelines or disrupting users on older app versions."]}
+  ];
+
+  var ABOUT={
+ "name": "Rutvik Keche",
+ "role": "Associate Product Manager",
+ "place": "Bengaluru, India",
+ "contact": [
+  {
+   "t": "+91-7600059240",
+   "h": "tel:+917600059240"
+  },
+  {
+   "t": "rutvikkeche@gmail.com",
+   "h": "mailto:rutvikkeche@gmail.com"
+  },
+  {
+   "t": "LinkedIn",
+   "h": "https://www.linkedin.com/in/rutvik-keche-31a188158/"
+  }
+ ],
+ "summary": "Product Manager with a background in software engineering, semiconductor R&D, Physics, and Electrical & Electronics Engineering. Currently building app-wide product infrastructure and consumer experiences at BigBasket; previously developed camera software for flagship smartphones at Samsung Semiconductor India Research. Experience spans product systems, experimentation, backend logic, and cross-functional product development.",
+ "experience": [
+  {
+   "date": [
+    "May 2026",
+    "to Present"
+   ],
+   "sub": "Associate Product Manager",
+   "main": "BigBasket, Bengaluru",
+   "text": [
+    "Led app-wide migration to Lumen, a new design system, as part of a brand repositioning exercise; aligned product, design, and engineering on shared UI components, driving a 2% increase in sales per visitor on browse journeys",
+    "Own onsite merchandising across categories, the content delivery architecture, and page wireframes across product surfaces",
+    "Designed two reward delivery flows for non-endemic brand partners, driving 22% CTR and ~$2K in daily revenue",
+    "Built widget-level CTR reporting into the data pipeline, giving product and design the granularity to prioritize widget iterations"
+   ]
+  },
+  {
+   "date": [
+    "Apr 2025",
+    "to Jun 2025"
+   ],
+   "sub": "Product Management Intern",
+   "main": "BigBasket, Bengaluru",
+   "text": [
+    "Overhauled product filters across categories, increasing engagement with the filter feature by 4%",
+    "Audited competitor brands and redesigned 8 app pages, improving content hierarchy and sponsored content placement",
+    "Diagnosed a 2% checkout funnel drop-off and shipped interventions targeting the underlying bottlenecks",
+    "Shipped 22 UX improvements surfaced by competitive analysis, spanning accessibility and interaction patterns",
+    "Drove 30+ UI/UX changes as product POC, coordinating scope, priorities, and delivery across engineering and design"
+   ]
+  },
+  {
+   "date": [
+    "Aug 2023",
+    "to May 2024"
+   ],
+   "sub": "Senior Software Engineer",
+   "main": "Samsung Semiconductor India Research, Bengaluru",
+   "text": [
+    "Developed software for high-resolution camera sensor systems deployed in flagship smartphones",
+    "Built and optimized image-processing pipelines, improving camera output pixel quality",
+    "Conducted in-depth root cause analysis across camera software modules to reduce recurring quality defects and improve reliability",
+    "Led 3 software release cycles in collaboration with engineering teams in Korea",
+    "Conducted 12 technical training sessions for a 10-person engineering team"
+   ]
+  },
+  {
+   "date": [
+    "Aug 2022",
+    "to Jun 2023"
+   ],
+   "sub": "Software Intern",
+   "main": "Samsung Semiconductor India Research, Bengaluru",
+   "text": [
+    "Built a 300-sample dataset for algorithm testing, validation, and performance evaluation",
+    "Managed the optimization and integration of 33 camera features",
+    "Earned the sole pre-placement offer among 31 interns"
+   ]
+  },
+  {
+   "date": [
+    "May 2020",
+    "to Jun 2020"
+   ],
+   "sub": "Market Research Intern",
+   "main": "Tech Mahindra, Remote",
+   "text": [
+    "Primary research: analyzed consumer attitudes and emerging trends in EdTech adoption during COVID-19",
+    "Secondary research: conducted research on technology adoption and AI/ML-driven market disruption"
+   ]
+  }
+ ],
+ "education": [
+  {
+   "date": [
+    "2024",
+    "to 2026"
+   ],
+   "sub": "BITS School of Management (BITSoM), Mumbai",
+   "main": "MBA, Marketing and Consumer Insights",
+   "text": [
+    "GPA: 3.44/4"
+   ]
+  },
+  {
+   "date": [
+    "2018",
+    "to 2023"
+   ],
+   "sub": "Birla Institute of Technology and Science, Pilani – Goa Campus",
+   "main": "B.E. (Hons.) Electrical and Electronics Engineering and M.Sc. (Hons.) Physics",
+   "text": [
+    "CGPA: 8.2/10"
+   ]
+  }
+ ],
+ "positions": [
+  {
+   "date": [
+    "2024",
+    "to 2026"
+   ],
+   "sub": "BITSoM Marketing Committee",
+   "main": "Design Lead",
+   "text": [
+    "Led design for the Marketing Committee, creating video and static creatives published on the college's official channels",
+    "Produced and managed short-form content that contributed to 1M+ views across college's socials"
+   ]
+  },
+  {
+   "date": [
+    "2024",
+    "to 2025"
+   ],
+   "sub": "BITSoM Product Management Club",
+   "main": "Joint Secretary",
+   "text": [
+    "Launched two product education series focused on product analysis and feature deep-dives",
+    "Served as the primary product club representative for the Class of 2026"
+   ]
+  }
+ ]
+};
+  var PB={}, ARR='<svg class="arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M2 10L10 2M4 2h6v6"/></svg>';
+  PROJECTS.forEach(function(p,i){
+    p.n=('0'+(i+1)).slice(-2); PB[p.slug]=p;
+    p.desc=p.desc||[
+      'Placeholder. Describe '+p.title+' here: the problem it solved, your role, what you built and the outcome.',
+      'Add a second paragraph for the details that matter: who you worked with, the trade-offs you made and what you learned.'
+    ];
+  });
+  function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+  var ARTICLES=[
+    {slug:"fair-vs-random-rewards",title:"The Trade-off Between Fair and Random Rewards",date:"June 2026",body:["Having had the chance to work on widgets, particularly those built around probabilistic reward mechanisms, the reward distribution problem emerges as a more compelling challenge than the engagement mechanic.", "Promotional campaigns involving multiple brands often use lightweight interactions like spin wheels, mystery reveals, or slot mechanics to drive engagement. However, in random reward sampling, two problems emerge.", "The first occurs during extended user interaction. Even with correct probabilities, rewards can naturally cluster, giving certain brands significantly more exposure over meaningful stretches of time.", "For example: If rewards are sequenced as", "#2 - 2 - 1 - 2 - 2 - 3", "While statistically valid, this sequence grants brand \"2\" substantial visibility.", "The second problem appears when interactions are limited. Here, randomness may prevent certain rewards from appearing at all. A brand could receive zero exposure simply because the interaction window ended before probability surfaced it.", "Consider a campaign with five brands and five interactions/user:", "#2 - 4 - 2 - 5 - 5", "Some brands receive no exposure. While probability corrects this imbalance over a massive sample size, campaigns are rarely evaluated over horizons long enough for that correction to occur naturally.", "To reduce repetition and improve distribution, systems can structure reward allocation across a sequence rather than treating each interaction independently.", "Suppose there are six rewards. Rather than allowing unrestricted repetition, the system can ensure all six rewards appear before any repeat.", "The sequence might evolve as:", "#2 - 1 - 4 - 5 - 6 - 3", "Once every participant has appeared, the next cycle generates a new ordering:", "#4 - 2 - 6 - 1 - 5 - 3", "This reduces clustering and ensures brands are not excluded from short interaction windows.", "However, implementing this introduces another layer of complexity: the system now requires memory. It must track which rewards have appeared, how frequently, and how recently.", "Tracking rewards alone is often insufficient. As distribution is controlled, the space of possible sequences shrinks, causing similar patterns to repeat over long campaigns. To prevent this and preserve the perception of unpredictability, the system must retain awareness of previously generated sequences to keep future streams distinct.", "However, aggressive optimization for exposure distribution introduces visible structure into the outcome stream. Over repeated interactions, users may notice that duplicate streaks disappear, all participating brands eventually appear, and rewards rarely cluster naturally.", "Greater randomness does improve unpredictability but produces uneven exposure. Greater control guarantees balanced distribution but makes the underlying sequencing logic increasingly apparent to the user.", "Ultimately, every layer of control ensures fair reward distribution, but it also makes the invisible logic of the system a little easier to notice."]},
+    {slug:"sell-the-chance-not-the-slot",title:"Sell the Chance, Not the Slot",date:"June 2026",body:["Sponsored brand carousels are an interesting monetisation asset because they must balance two competing objectives: maximising demand for the most valuable position without rendering the remaining positions commercially irrelevant.", "Most carousels today operate on a reservation model, where brands pay to lock a fixed position for a fixed period. The challenge is that most of the value ends up concentrated in Position 1.", "Once a brand secures the top slot, everyone else is effectively competing for second place. Most brands want to bid for Position 1 because that's where the majority of visibility and traffic sits.", "As a result, positions further down the carousel often attract significantly less demand and can even go unsold, forcing platforms to fill them with house ads, category promotions, or other non-paying content.", "One alternative is to stop selling the position itself and start selling the chance to appear there.", "Rather than guaranteeing the top slot to a single brand, platforms could allow multiple brands to purchase a probability-weighted share of Position 1 impressions. Brands would continue to retain their default placements within the carousel, but would periodically appear in the top slot based on their allocated share of premium visibility. This can be controlled through weighted randomisation.", "This could create a healthier marketplace by giving challenger brands a realistic path to premium visibility while allowing platforms to generate demand from a broader set of advertisers. Rather than having a single highly contested slot and several lower-value ones, platforms could potentially create competition across the entire carousel.", "The downside is that it may be harder to sell. Reservation models offer certainty; brands know exactly what they're paying for. A probability-based model replaces guaranteed visibility with expected visibility, making the value proposition less intuitive.", "Whether the added competition outweighs the loss of certainty is a much more nuanced question."]},
+    {slug:"event-data-that-grows-without-breaking",title:"Designing Event Data That Grows Without Breaking",date:"July 2026",body:["Modern applications generate a wide range of user actions across millions of users. Consider a simple e-commerce app: a single session might involve viewing an item, adding it to a cart, or completing a purchase. Each action carries attributes worth recording, such as which item was involved, its position on the screen, or the device used. At small scale, capturing this detail is trivial.", "At scale, the question shifts from what to record to how to structure it, so the system stays manageable as requirements evolve.", "The standard approach stores each type of action as a table, with one row per occurrence. The attributes of that action, item, position, device, are stored as columns on that row. The straightforward way to capture more detail is to add a new column for every new attribute. This does not scale well: each additional attribute increases the payload sent per action, and each becomes a new column permanently sitting on the table.", "The common fix is bundling, instead of sending several related values as separate fields, the app packs them into a single structured field before transmission. This produces fewer, denser payloads, reducing transmission cost and keeping the table from sprawling.", "Bundling, however, creates its own problem. Reports are usually built against a table's existing structure. If the packed field is stored as-is, any later change to what it contains changes its shape, and reports already reading it were written expecting the old structure, so they can break.", "The solution is to unpack the field into individual, explicit columns at the point of storage, rather than keeping it bundled inside the table. When the team wants to track one more detail, they add a field to the packed value sent from the client. Since that value is already being split apart at storage, the new field simply becomes one more column to unpack.", "Existing columns and reports never need to change. This is the essential design decision: not merely choosing to bundle data but recognizing in advance that storing the bundle unprocessed would eventually create conflicts downstream, and addressing that before the data reaches the table. Because the field is split into columns at the point of storage, adding a new detail later is trivial: one more field goes into the bundle, and the existing unpacking step picks it up automatically.", "This does not require anticipating every detail a system might ever need to track. It only requires that the unpacking mechanism be in place from the start. New requirements are then handled by extending the bundle, not by redesigning the table.", "The system stays easy to extend precisely because nobody had to predict its future in advance. This is one example of a broader pattern in data pipeline design. It is usually the product of many such choices, made independently at different points, that happen to reinforce one another over time."]},
+    {slug:"beyond-last-touch-attribution",title:"Beyond Last-Touch: Capturing the Middle of the Journey",date:"September 2026",body:["Most product analytics is built around a simple question: what led to this outcome?", "The usual answer comes from the edges of the journey. What did the user do first? What did they do immediately before converting? This is why first-touch and last-touch attribution are so common.", "But users don't actually behave like linear funnels.", "Imagine you're using a shopping app. You open a phone from the home feed, check its specifications and reviews, visit another phone to compare it, come back to the first one, check the reviews again, and finally tap Buy Now.", "A last-touch model might say the final product-page visit caused it. But that visit only happened because of everything that came before it. The reviews may have built confidence, the comparison may have eliminated the alternative, and the second visit may simply have been when the user finally decided.", "That's what first- and last-touch attribution can miss: the middle path — the sequence of screens, actions, and revisits that provides context for the final action.", "And this is where attribution gets difficult. A user might visit several screens, perform an important action, leave, come back, and do the same thing again. To understand this later, we have to stitch together dozens of events and postulate a sequence that might have actually mattered.", "One way to deal with this is to capture the user's path at the moment something important happens.", "Think of it as a small trail following the user through the product. As they move from Home → Product → Reviews → Comparison → Cart, the trail updates locally. When they start checkout, add to cart, subscribe, or convert, we attach the relevant part of that trail to the event.", "So instead of simply knowing \"User started checkout,\" we know they started checkout after visiting Product → Reviews → Comparison → Product → Cart.", "This doesn't magically solve attribution. A path still doesn't tell us that the reviews caused the purchase. But it gives us something more than a single touchpoint.", "We can now ask better questions: Do users who convert tend to read reviews twice? Do people who compare products convert at a higher rate? Does a particular sequence consistently appear before conversion?", "There is, of course, a cost. Longer journeys mean larger event payloads, especially at scale. A power user might have visited fifty screens before reaching an important action, and attaching all fifty to every event doesn't make much sense.", "A better approach is to compute a reasonable lookback window. Keep enough of the recent path to provide meaningful context, perhaps the last 5–10 relevant events, while leaving the rest of the session behind.", "That feels like the more practical optimum: deep enough to understand the middle of the funnel, but not so deep that you're paying to store a replay of the entire session on every event."]}
+  ], AB={}; ARTICLES.forEach(function(a){AB[a.slug]=a;});
+  function itemHTML(p){
+    return '<li><a class="item" href="#/p/'+p.slug+'"><span class="no" aria-hidden="true" data-n="'+p.n+'"></span><span class="lb">'+esc(p.title)+'</span>'+ARR+'</a></li>';
+  }
+  document.getElementById('list').innerHTML=PROJECTS.map(itemHTML).join('');
+
+  /* ---------- scroll cue ---------- */
+  var list=document.getElementById('list'), wrap=document.getElementById('wrap'), more=document.getElementById('more'), moreN=document.getElementById('moreN');
+  var still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function update(){
+    var top=list.scrollTop, h=list.clientHeight, sh=list.scrollHeight;
+    var atStart=top<=2, atEnd=top+h>=sh-2;
+    wrap.setAttribute('data-start',atStart?'true':'false');
+    wrap.setAttribute('data-end',atEnd?'true':'false');
+    var n=0, items=list.children;
+    for(var i=0;i<items.length;i++){ if(items[i].offsetTop+items[i].offsetHeight>top+h+2) n++; }
+    moreN.textContent=n;
+  }
+  list.addEventListener('scroll',function(){ requestAnimationFrame(update); },{passive:true});
+  window.addEventListener('resize',update);
+  if('ResizeObserver' in window) new ResizeObserver(update).observe(list);
+  update();
+  more.addEventListener('click',function(){ list.scrollBy({top:list.clientHeight*.8,behavior:still?'auto':'smooth'}); });
+
+  /* Placeholder link until you add a real contact URL. */
+  document.querySelectorAll('.hi').forEach(function(a){
+    a.addEventListener('click',function(e){ if(a.getAttribute('href')==='#') e.preventDefault(); });
+  });
+
+  /* ---------- project page (hash routes: #/p/<slug>, back = #/) ---------- */
+  var view=document.getElementById('project'), pmain=document.getElementById('pmain'), peek=document.getElementById('peek'), page=document.querySelector('.page');
+  var lastTrigger=null, ptimer=0;
+  function setPeek(o){ peek.classList.toggle('open',o); var t=peek.querySelector('.peek-tab'); if(t) t.setAttribute('aria-expanded',o?'true':'false'); }
+  function buildPeek(slug){
+    peek.innerHTML='<button class="peek-tab" type="button" aria-expanded="false" aria-controls="peek-panel">Projects</button>'+
+      '<nav class="peek-panel" id="peek-panel" aria-label="Other projects"><h2>More projects</h2><ul>'+
+      PROJECTS.filter(function(p){return p.slug!==slug;}).map(itemHTML).join('')+'</ul></nav>';
+    var tab=peek.querySelector('.peek-tab'), panel=peek.querySelector('.peek-panel');
+    function openP(ev){ if(ev&&ev.pointerType==='touch') return; clearTimeout(ptimer); setPeek(true); }
+    function closeP(ev){ if(ev&&ev.pointerType==='touch') return; clearTimeout(ptimer); ptimer=setTimeout(function(){ setPeek(false); },260); }
+    [tab,panel].forEach(function(n){ n.addEventListener('pointerenter',openP); n.addEventListener('pointerleave',closeP); });
+    tab.addEventListener('click',function(){ clearTimeout(ptimer); var o=!peek.classList.contains('open'); setPeek(o); if(o){ var a=panel.querySelector('a'); if(a&&tab.matches(':focus-visible')) a.focus(); } });
+    panel.addEventListener('click',function(e){ if(e.target.closest('a')) setPeek(false); });
+  }
+  function openProject(slug){
+    var p=PB[slug];
+    var stats=(p.stats||[]).map(function(t){return '<div class="cs-stat"><strong>'+esc(t.v)+'</strong><span>'+esc(t.l)+'</span></div>';}).join('');
+    var body=p.blocks?p.blocks.map(function(bk){return (bk.h?'<h2 class="cs-sub">'+esc(bk.h)+'</h2>':'')+bk.p.map(function(t){return '<p>'+esc(t)+'</p>';}).join('');}).join(''):p.desc.map(function(t){return '<p>'+esc(t)+'</p>';}).join('');
+    pmain.innerHTML='<article class="cases solo"><section class="cs"><div class="cs-n" aria-hidden="true">'+p.n+'</div><div class="cs-body"><div class="cs-t"><h1 id="ptitle" tabindex="-1">'+esc(p.heading||p.title)+'</h1><p class="cs-tag">'+esc(p.tag)+'</p>'+(stats?'<div class="cs-stats">'+stats+'</div>':'')+'</div><div class="cs-x">'+body+'</div></div></section></article>';
+    buildPeek(slug);
+    view.classList.add('on'); view.scrollTop=0;
+    page.setAttribute('inert',''); page.setAttribute('aria-hidden','true');
+    view.setAttribute('aria-label',p.title);
+    document.getElementById('ptitle').focus({preventScroll:true});
+  }
+  function openAbout(){
+    var A=ABOUT;
+    function items(list){ return list.map(function(r){
+      return '<div class="rs-item"><div class="rs-date">'+esc(r.date[0])+'<br>'+esc(r.date[1])+'</div><div class="rs-main"><p class="rs-sub">'+esc(r.sub)+'</p><strong>'+esc(r.main)+'</strong>'+(r.text?(Array.isArray(r.text)?(r.text.length>1?'<ul class="rs-bul">'+r.text.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul>':'<p>'+esc(r.text[0])+'</p>'):'<p>'+esc(r.text)+'</p>'):'')+'</div></div>';
+    }).join(''); }
+    pmain.innerHTML='<article class="resume">'+
+      '<header class="rs-head"><div class="rs-photo" role="img" aria-label="Portrait of Rutvik"></div>'+
+      '<p class="rs-id"><strong id="ptitle" tabindex="-1">'+esc(A.name)+'</strong><br>'+esc(A.role)+'<br>'+esc(A.place)+'</p>'+
+      '<p class="rs-contact">'+A.contact.map(function(c){return '<a href="'+esc(c.h)+'"'+(c.h.indexOf('http')===0?' target="_blank" rel="noopener"':'')+'>'+esc(c.t)+'</a>';}).join('<br>')+'</p></header>'+
+      '<p class="rs-summary">'+esc(A.summary)+'</p>'+
+      '<section class="rs-sec"><h2>Experience</h2>'+items(A.experience)+'</section>'+
+      '<section class="rs-sec"><h2>Education</h2>'+items(A.education)+'</section>'+
+      '<section class="rs-sec"><h2>Positions of responsibility</h2>'+items(A.positions)+'</section>'+
+      '</article>';
+    peek.innerHTML=''; setPeek(false);
+    view.classList.add('on'); view.scrollTop=0;
+    page.setAttribute('inert',''); page.setAttribute('aria-hidden','true');
+    view.setAttribute('aria-label','About Rutvik');
+    document.getElementById('ptitle').focus({preventScroll:true});
+  }
+  function showView(label){
+    view.classList.add('on'); view.scrollTop=0;
+    page.setAttribute('inert',''); page.setAttribute('aria-hidden','true');
+    view.setAttribute('aria-label',label);
+    var t=document.getElementById('ptitle'); if(t) t.focus({preventScroll:true});
+  }
+  var MAXMSG=600, TO='rutvikkeche@gmail.com';
+  function openHi(){
+    pmain.innerHTML='<div class="mus-wrap hi-page"><a class="mus-back" href="#/"><span class="mus-arr" aria-hidden="true">&lt;&lt;</span>back to home</a><h1 id="ptitle" tabindex="-1">Say hi</h1>'+
+      '<p class="mus-sub">Write a note, and it\'ll open in your email app, ready for you to send it my way.</p>'+
+      '<form class="hi-form" id="hiform" autocomplete="off"><label for="hi-name">Your name</label><input id="hi-name" type="text" maxlength="60">'+
+      '<label for="hi-msg">Message</label><textarea id="hi-msg" maxlength="'+MAXMSG+'" rows="8" required></textarea>'+
+      '<div class="hi-row"><span class="hi-count" id="hi-count" aria-live="polite">0 / '+MAXMSG+'</span><button type="submit" class="hi-send"><span>Send</span><svg viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M0 5h12M8 1l4 4-4 4"/></svg></button></div>'+
+      '<p class="hi-note" id="hi-note" role="status"></p></form></div>';
+    peek.innerHTML=''; setPeek(false); showView('Say hi');
+    var f=document.getElementById('hiform'), m=document.getElementById('hi-msg'), n=document.getElementById('hi-name'), c=document.getElementById('hi-count'), note=document.getElementById('hi-note');
+    m.addEventListener('input',function(){ c.textContent=m.value.length+' / '+MAXMSG; });
+    f.addEventListener('submit',function(e){
+      e.preventDefault();
+      var msg=m.value.trim(); if(!msg){ note.textContent='Write a message first.'; m.focus(); return; }
+      var who=n.value.trim();
+      location.href='mailto:'+TO+'?subject='+encodeURIComponent('Hi from your website'+(who?' – '+who:''))+'&body='+encodeURIComponent(msg+(who?'\n\n– '+who:''));
+      note.textContent='Opening your email app. If nothing opens, write to '+TO+'.';
+    });
+  }
+  function openMusings(){
+    pmain.innerHTML='<div class="mus-wrap"><a class="mus-back" href="#/"><span class="mus-arr" aria-hidden="true">&lt;&lt;</span>back to home</a><h1 id="ptitle" tabindex="-1">Product Musings</h1><ul class="mus-list">'+
+      ARTICLES.map(function(a){return '<li><a href="#/musings/'+a.slug+'"><strong>'+esc(a.title)+'</strong><span>Published: '+esc(a.date)+'.</span></a></li>';}).join('')+'</ul></div>';
+    peek.innerHTML=''; setPeek(false); showView('Product Musings');
+  }
+  function openArticle(slug){
+    var a=AB[slug];
+    pmain.innerHTML='<article class="mus-wrap"><a class="mus-back" href="#/musings"><span class="mus-arr" aria-hidden="true">&lt;&lt;</span>back to musings</a><h1 id="ptitle" tabindex="-1">'+esc(a.title)+'</h1><p class="mus-pub">Published: '+esc(a.date)+'.</p>'+
+      a.body.map(function(t){return t.charAt(0)==='#'?'<p class="mus-seq">'+esc(t.slice(1))+'</p>':'<p>'+esc(t)+'</p>';}).join('')+'</article>';
+    peek.innerHTML=''; setPeek(false); showView(a.title);
+  }
+  function closeProject(){
+    if(!view.classList.contains('on')) return;
+    view.classList.remove('on'); setPeek(false);
+    page.removeAttribute('inert'); page.removeAttribute('aria-hidden');
+    if(lastTrigger&&document.contains(lastTrigger)) lastTrigger.focus({preventScroll:true});
+  }
+  function route(){
+    var h=location.hash, mm=h.match(/^#\/musings(?:\/([\w-]+))?/);
+    view.classList.toggle('mus',!!mm);
+    if(mm){ if(mm[1]&&AB[mm[1]]) openArticle(mm[1]); else openMusings(); return; }
+    if(h==='#/hi'){ view.classList.add('mus'); openHi(); return; }
+    if(location.hash==='#/about'){ openAbout(); return; }
+    var m=location.hash.match(/^#\/p\/([\w-]+)/);
+    if(m&&PB[m[1]]) openProject(m[1]); else closeProject();
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a.item,a.mark,a.hi'); if(a&&!view.contains(a)) lastTrigger=a;
+  },true);
+  document.addEventListener('pointerdown',function(e){ if(peek.classList.contains('open')&&!peek.contains(e.target)) setPeek(false); },true);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&peek.classList.contains('open')){ setPeek(false); var t=peek.querySelector('.peek-tab'); if(t) t.focus(); }
+  });
+  window.addEventListener('hashchange',route);
+  route();
+})();
+</script>
+
+</body>
+</html>
