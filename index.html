@@ -254,10 +254,13 @@ body{font-family:var(--mono); -webkit-font-smoothing:antialiased}
 .rs-sec{margin:0 0 3.2em}
 .rs-sec h2{margin:0 0 1.8em; display:flex; gap:.8em; align-items:baseline; font-size:.9em; font-weight:500; letter-spacing:.06em; text-transform:uppercase}
 .rs-sec h2::before{content:"\00b6"; font-weight:500}
-.rs-item{display:grid; grid-template-columns:13em minmax(0,1fr); column-gap:1.6em; margin:0 0 2.2em}
+.rs-item{margin:0 0 2.2em}
 .rs-date,.rs-sub{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif; font-style:italic; font-size:1.12em; line-height:1.4; color:#333}
 .rs-sub{margin:0 0 .7em}
 .rs-date{white-space:nowrap}
+.rs-line{display:flex; flex-wrap:wrap; align-items:baseline; column-gap:.8em; margin:0 0 .3em}
+.rs-line strong{display:inline; margin:0}
+.rs-pipe{color:#999}
 .rs-main{min-width:0}
 .rs-main strong{display:block; font-weight:500; margin:0 0 .3em}
 .rs-main p{margin:0}
@@ -567,7 +570,7 @@ body{font-family:var(--mono); -webkit-font-smoothing:antialiased}
   function openAbout(){
     var A=ABOUT;
     function items(list){ return list.map(function(r){
-      return '<div class="rs-item"><div class="rs-date">'+esc(r.date[0])+' – '+esc(r.date[1].replace(/^to /,''))+'</div><div class="rs-main"><strong>'+esc(r.main)+'</strong><p class="rs-sub">'+esc(r.sub)+'</p>'+(r.text?(Array.isArray(r.text)?(r.text.length>1?'<ul class="rs-bul">'+r.text.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul>':'<p>'+esc(r.text[0])+'</p>'):'<p>'+esc(r.text)+'</p>'):'')+'</div></div>';
+      return '<div class="rs-item"><div class="rs-main"><div class="rs-line"><strong>'+esc(r.main)+'</strong><span class="rs-pipe" aria-hidden="true">|</span><span class="rs-date">'+esc(r.date[0])+' – '+esc(r.date[1].replace(/^to /,''))+'</span></div><p class="rs-sub">'+esc(r.sub)+'</p>'+(r.text?(Array.isArray(r.text)?(r.text.length>1?'<ul class="rs-bul">'+r.text.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul>':'<p>'+esc(r.text[0])+'</p>'):'<p>'+esc(r.text)+'</p>'):'')+'</div></div>';
     }).join(''); }
     pmain.innerHTML='<article class="resume">'+
       '<header class="rs-head"><div class="rs-photo" role="img" aria-label="Portrait of Rutvik"></div>'+
